@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7589405482409490039}
   - component: {fileID: 7589405482409490038}
   - component: {fileID: 7589405482409490041}
+  - component: {fileID: 1140206716}
   m_Layer: 6
   m_Name: Character1Prefab
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 7589405482409490036}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 500, y: 500, z: 1}
-  m_LocalScale: {x: 200, y: 200, z: 1}
+  m_LocalScale: {x: 100, y: 100, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -72,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 7b814a15f8d73634a87b6e41ae675554, type: 3}
+  m_Sprite: {fileID: -2948514184157894059, guid: 6686d7cb2c517944e87087cd69961511, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,6 +101,26 @@ MonoBehaviour:
   attackStat: 5
   maxHealth: 30
   currentHealth: 30
-  healAmount: 10
-  magicAttackStat: 8
+  healAmount: 5
+  magicAttackStat: 10
   magicPoints: 20
+  maxMagicPoints: 20
+--- !u!95 &1140206716
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7589405482409490036}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c8e06fb744e4d384887f713fd6f2727f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

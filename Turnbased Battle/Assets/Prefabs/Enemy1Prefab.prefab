@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7627170156682715367}
   - component: {fileID: 7627170156682715366}
   - component: {fileID: 2156537850656192596}
+  - component: {fileID: 818755506}
   m_Layer: 0
   m_Name: Enemy1Prefab
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 7627170156682715385}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1500, y: 500, z: 1}
-  m_LocalScale: {x: 200, y: 200, z: 1}
+  m_LocalScale: {x: 100, y: 100, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -72,9 +73,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 7b814a15f8d73634a87b6e41ae675554, type: 3}
+  m_Sprite: {fileID: -5806457359794995684, guid: 9502bbf418f0e88499c5da6e97855fa9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.32, y: 0.32}
@@ -95,11 +96,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5376376f242df9e4195e504ef42e1132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Enemy
+  Name: Zombie
   level: 5
   attackStat: 5
   maxHealth: 30
   currentHealth: 30
-  healAmount: 10
-  magicAttackStat: 8
+  healAmount: 5
+  magicAttackStat: 10
   magicPoints: 20
+  maxMagicPoints: 20
+--- !u!95 &818755506
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7627170156682715385}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 12c6f62ddc72fb141afc2512311724d9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

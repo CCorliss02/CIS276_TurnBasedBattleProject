@@ -12,6 +12,7 @@ public class StatsScript : MonoBehaviour
     public int healAmount;
     public int magicAttackStat;
     public int magicPoints;
+    public int maxMagicPoints;
 
     public bool Damage(int dmg)
     {

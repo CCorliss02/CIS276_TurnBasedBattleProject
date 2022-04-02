@@ -23,6 +23,9 @@ public class BattleManager : MonoBehaviour
 
     public BattleState state;
 
+    public Animator characterAnimator;
+    public Animator enemyAnimator;
+
     void Start()
     {
         state = BattleState.START;
@@ -33,15 +36,17 @@ public class BattleManager : MonoBehaviour
     {
         GameObject characterSpawn = Instantiate(character1Prefab, new Vector3(500, 500), Quaternion.identity);
         characterStats = characterSpawn.GetComponent<StatsScript>();
+        characterAnimator = characterSpawn.GetComponent<Animator>();
         GameObject enemySpawn = Instantiate(enemy1Prefab, new Vector3(1500, 500), Quaternion.identity);
         enemyStats = enemySpawn.GetComponent<StatsScript>();
+        enemyAnimator = enemySpawn.GetComponent<Animator>();
 
         characterNameText.text = characterStats.Name;
-        characterHealthText.text = characterStats.currentHealth.ToString();
-        characterMPText.text = characterStats.magicPoints.ToString();
+        characterHealthText.text = "HP: " + characterStats.currentHealth + "/" + characterStats.maxHealth;
+        characterMPText.text = "MP: " + characterStats.magicPoints + "/" + characterStats.maxMagicPoints;
         enemyNameText.text = enemyStats.Name;
-        enemyHealthText.text = enemyStats.currentHealth.ToString();
-        enemyMPText.text = enemyStats.magicPoints.ToString();
+        enemyHealthText.text = "HP: " + enemyStats.currentHealth + "/" + enemyStats.maxHealth;
+        enemyMPText.text = "MP: " + enemyStats.magicPoints + "/" + enemyStats.maxMagicPoints;
 
         state = BattleState.PLAYERTURN;
         PlayerTurn();
@@ -53,9 +58,19 @@ public class BattleManager : MonoBehaviour
 
         outcomeText.text = characterStats.Name + " attacks!";
 
+        characterAnimator.SetTrigger("Attack");
+
+        yield return new WaitForSeconds(1.3f);
+
+        enemyAnimator.SetTrigger("Hurt");
+
+        characterAnimator.SetTrigger("Idle");
+
         yield return new WaitForSeconds(1f);
 
-        enemyHealthText.text = (enemyStats.currentHealth).ToString();
+        enemyAnimator.SetTrigger("Idle");
+
+        enemyHealthText.text = enemyHealthText.text = "HP: " + enemyStats.currentHealth + "/" + enemyStats.maxHealth;
 
         yield return new WaitForSeconds(1f);
 
@@ -76,11 +91,14 @@ public class BattleManager : MonoBehaviour
     {
         outcomeText.text = characterStats.Name + " uses Heal!";
 
+        characterAnimator.SetTrigger("Heal");
+
         yield return new WaitForSeconds(1f);
 
         if (characterStats.currentHealth >= characterStats.maxHealth)
         {
             outcomeText.text = "But " + characterStats.Name + " is already at full health.";
+            characterAnimator.SetTrigger("Idle");
         }
 
  //       else if (characterStats.maxHealth >= characterStats.currentHealth >= characterStats.maxHealth - characterStats.healAmount)
@@ -90,10 +108,12 @@ public class BattleManager : MonoBehaviour
 
         else
         {
+            characterAnimator.SetTrigger("Idle");
+
             characterStats.magicPoints = characterStats.magicPoints - 2;
-            characterMPText.text = (characterStats.magicPoints).ToString();
+            characterMPText.text = "MP: " + characterStats.magicPoints + "/" + characterStats.maxMagicPoints;
             characterStats.Heal(characterStats.healAmount);
-            characterHealthText.text = (characterStats.currentHealth).ToString();
+            characterHealthText.text = "HP: " + characterStats.currentHealth + "/" + characterStats.maxHealth;
         }
 
         yield return new WaitForSeconds(1f);
@@ -108,12 +128,23 @@ public class BattleManager : MonoBehaviour
 
         outcomeText.text = characterStats.Name + " casts Cyclone!";
 
+        characterAnimator.SetTrigger("Spell");
+
+        yield return new WaitForSeconds(1f);
+
+        enemyAnimator.SetTrigger("Hurt");
+
+        characterAnimator.SetTrigger("Idle");
+
+        yield return new WaitForSeconds(1f);
+
+        enemyAnimator.SetTrigger("Idle");
+
         characterStats.magicPoints = characterStats.magicPoints - 8;
 
-        characterMPText.text = (characterStats.magicPoints).ToString();
+        characterMPText.text = "MP: " + characterStats.magicPoints + "/" + characterStats.maxMagicPoints;
 
-        enemyHealthText.text = (enemyStats.currentHealth).ToString();
-
+        enemyHealthText.text = enemyHealthText.text = "HP: " + enemyStats.currentHealth + "/" + enemyStats.maxHealth;
 
         yield return new WaitForSeconds(1f);
 
@@ -132,24 +163,128 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator EnemyTurn()
     {
-        outcomeText.text = enemyStats.Name + " attacks!";
+        int enemyDecision = Random.Range(1, 4);
 
-        yield return new WaitForSeconds(1f);
-
-        bool isDefeated = characterStats.Damage(enemyStats.attackStat);
-
-        characterHealthText.text = (characterStats.currentHealth).ToString();
-
-        yield return new WaitForSeconds(1f);
-
-        if (isDefeated)
+        if (enemyDecision == 1)
         {
-            state = BattleState.LOSE;
-            EndBattle();
+            bool isDefeated = characterStats.Damage(enemyStats.attackStat);
+
+            outcomeText.text = enemyStats.Name + " attacks!";
+
+            enemyAnimator.SetTrigger("Attack");
+
+            yield return new WaitForSeconds(1.3f);
+
+            characterAnimator.SetTrigger("Hurt");
+
+            enemyAnimator.SetTrigger("Idle");
+
+            yield return new WaitForSeconds(1f);
+
+            characterAnimator.SetTrigger("Idle");
+
+            characterHealthText.text = "HP: " + characterStats.currentHealth + "/" + characterStats.maxHealth;
+
+            yield return new WaitForSeconds(1f);
+
+            if (isDefeated)
+            {
+                state = BattleState.LOSE;
+                EndBattle();
+            }
+
+            else
+            {
+                state = BattleState.PLAYERTURN;
+                PlayerTurn();
+            }
         }
 
-        else
+        if (enemyDecision == 2 && enemyStats.magicPoints >= 8)
         {
+            bool isDefeated = characterStats.Damage(enemyStats.magicAttackStat);
+
+            outcomeText.text = enemyStats.Name + " casts Cyclone!";
+
+            enemyAnimator.SetTrigger("Spell");
+
+            yield return new WaitForSeconds(1f);
+            
+            characterAnimator.SetTrigger("Hurt");
+
+            enemyAnimator.SetTrigger("Idle");
+
+            yield return new WaitForSeconds(1f);
+
+            characterAnimator.SetTrigger("Idle");
+
+            enemyStats.magicPoints = enemyStats.magicPoints - 8;
+
+            enemyMPText.text = "MP: " + enemyStats.magicPoints + "/" + enemyStats.maxMagicPoints;
+
+            characterHealthText.text = "HP: " + characterStats.currentHealth + "/" + characterStats.maxHealth;
+
+            yield return new WaitForSeconds(1f);
+
+            if (isDefeated)
+            {
+                state = BattleState.LOSE;
+                EndBattle();
+            }
+
+            else
+            {
+                state = BattleState.PLAYERTURN;
+                PlayerTurn();
+            }
+        }
+
+        if (enemyDecision == 2 && enemyStats.magicPoints < 8)
+        {
+            outcomeText.text = enemyStats.Name + " is too tired to move!";
+
+            yield return new WaitForSeconds(1f);
+
+            state = BattleState.PLAYERTURN;
+            PlayerTurn();
+        }
+
+        if (enemyDecision == 3 && enemyStats.magicPoints >= 2)
+        {
+            outcomeText.text = enemyStats.Name + " uses Heal!";
+
+            enemyAnimator.SetTrigger("Heal");
+
+            yield return new WaitForSeconds(1f);
+
+            if (enemyStats.currentHealth >= enemyStats.maxHealth)
+            {
+                outcomeText.text = "But " + enemyStats.Name + " is already at full health.";
+                enemyAnimator.SetTrigger("Idle");
+            }
+
+            else
+            {
+                enemyAnimator.SetTrigger("Idle");
+
+                enemyStats.magicPoints = enemyStats.magicPoints - 2;
+                enemyMPText.text = "MP: " + enemyStats.magicPoints + "/" + enemyStats.maxMagicPoints;
+                enemyStats.Heal(enemyStats.healAmount);
+                enemyHealthText.text = enemyHealthText.text = "HP: " + enemyStats.currentHealth + "/" + enemyStats.maxHealth;
+            }
+
+            yield return new WaitForSeconds(1f);
+
+            state = BattleState.PLAYERTURN;
+            PlayerTurn();
+        }
+
+        if (enemyDecision == 3 && enemyStats.magicPoints < 2)
+        {
+            outcomeText.text = enemyStats.Name + " is too tired to move!";
+
+            yield return new WaitForSeconds(1f);
+
             state = BattleState.PLAYERTURN;
             PlayerTurn();
         }
@@ -160,11 +295,16 @@ public class BattleManager : MonoBehaviour
         if (state == BattleState.WIN)
         {
             outcomeText.text = "Victory!";
+            characterAnimator.SetTrigger("Victory");
+            enemyAnimator.SetTrigger("Defeated");
+
         }
 
         else if (state == BattleState.LOSE)
         {
             outcomeText.text = "Defeated.";
+            characterAnimator.SetTrigger("Defeated");
+            enemyAnimator.SetTrigger("Victory");
         }
     }
 
